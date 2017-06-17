@@ -17,10 +17,12 @@
 
 <resources>
 
-    <style name="Theme.Bacon" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="Theme.Bacon" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/seance_500</item>
         <item name="colorPrimaryDark">@color/seance_700</item>
         <item name="colorAccent">@color/green_accent</item>
+
+        <item name="android:foreground">?android:windowContentOverlay</item>
     </style>
 
 
