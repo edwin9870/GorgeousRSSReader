@@ -23,4 +23,7 @@
     <color name="seance_300">#d05ce3</color>
     <color name="seance_700">#6a0080</color>
     <color name="green_accent">#A2FF37</color>
+
+    <color name="colorPrimaryText">#DE000000</color>
+    <color name="colorSecondaryText">#8A000000</color>
 </resources>
