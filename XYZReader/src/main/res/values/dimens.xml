@@ -8,4 +8,10 @@
     <dimen name="fab_press_translation_z">6dp</dimen>
     <dimen name="fab_margin">24dp</dimen>
 
+    <!-- CardView -->
+    <dimen name="card_view_text_padding_left">16dp</dimen>
+    <dimen name="card_view_text_padding_right">@dimen/card_view_text_padding_left</dimen>
+    <dimen name="card_view_title_text_padding_top">24dp</dimen>
+    <dimen name="card_view_subtitle_text_padding_bottom">24dp</dimen>
+
 </resources>
