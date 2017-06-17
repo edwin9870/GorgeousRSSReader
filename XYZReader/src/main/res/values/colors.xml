@@ -22,4 +22,9 @@
     <color name="theme_primary_dark">#04561A</color>
     <color name="theme_accent">#04561A</color>
     <color name="ltgray">#ffe0e0e0</color>
+
+    <color name="seance_500">#9c27b0</color>
+    <color name="seance_300">#d05ce3</color>
+    <color name="seance_700">#6a0080</color>
+    <color name="green_accent">#A2FF37</color>
 </resources>
