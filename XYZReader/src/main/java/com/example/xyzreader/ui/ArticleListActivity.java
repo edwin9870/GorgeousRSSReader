@@ -148,13 +148,11 @@ public class ArticleListActivity extends ActionBarActivity implements
                 @Override
                 public void onClick(View view) {
 
-                    String transitionName = getString(R.string.transition_name_thumbnail) + String.valueOf(vh.getAdapterPosition());
-                    vh.thumbnailView.setTransitionName(transitionName);
+
 
                     Log.d(TAG, "Thumbnail transition name: "+ vh.thumbnailView.getTransitionName());
-
                     ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(ArticleListActivity.this,
-                            vh.thumbnailView, transitionName);
+                            vh.thumbnailView, vh.thumbnailView.getTransitionName());
 
                     Intent intent = new Intent(Intent.ACTION_VIEW,
                             ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition())));
@@ -180,6 +178,9 @@ public class ArticleListActivity extends ActionBarActivity implements
             mCursor.moveToPosition(position);
             holder.titleView.setText(mCursor.getString(ArticleLoader.Query.TITLE));
             Date publishedDate = parsePublishedDate();
+            String transitionName = getString(R.string.transition_name_thumbnail) + String.valueOf(position);
+            holder.thumbnailView.setTransitionName(transitionName);
+            Log.d(TAG, "transitionName: " + transitionName);
             if (!publishedDate.before(START_OF_EPOCH.getTime())) {
 
                 holder.subtitleView.setText(Html.fromHtml(
