@@ -36,6 +36,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
+import com.example.xyzreader.ui.component.ThreeTwoImageView;
 
 /**
  * A fragment representing a single Article detail screen. This fragment is
@@ -60,7 +61,7 @@ public class ArticleDetailFragment extends Fragment implements
 
     private int mTopInset;
     private View mPhotoContainerView;
-    private ImageView mPhotoView;
+    private ThreeTwoImageView mPhotoView;
     private int mScrollY;
     private boolean mIsCard = false;
     private int mStatusBarFullOpacityBottom;
@@ -157,7 +158,7 @@ public class ArticleDetailFragment extends Fragment implements
         });
 
 
-        mPhotoView = (ImageView) mRootView.findViewById(R.id.photo);
+        mPhotoView = (ThreeTwoImageView) mRootView.findViewById(R.id.photo);
         mPhotoView.setTransitionName(getString(R.string.transition_name_thumbnail) + mPosition);
         Log.d(TAG, "mPhotoView.getTransitionName()"+mPhotoView.getTransitionName());
         bindViews();
