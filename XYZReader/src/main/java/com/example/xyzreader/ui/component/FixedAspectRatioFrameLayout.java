@@ -50,19 +50,15 @@ public class FixedAspectRatioFrameLayout extends FrameLayout {
             finalHeight = calculatedHeight;
         }
 
-        super.onMeasure(
-                MeasureSpec.makeMeasureSpec(finalWidth, MeasureSpec.EXACTLY),
+        super.onMeasure(MeasureSpec.makeMeasureSpec(finalWidth, MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec(finalHeight, MeasureSpec.EXACTLY));
     }
 
     private void init(Context context, AttributeSet attrs) {
-        TypedArray styledAttributes = context.obtainStyledAttributes(attrs, R.styleable
-                .FixedAspectRatioFrameLayout);
+        TypedArray styledAttributes = context.obtainStyledAttributes(attrs, R.styleable.FixedAspectRatioFrameLayout);
         try {
-            mAspectRatioWidth = styledAttributes.getInt(R.styleable
-                    .FixedAspectRatioFrameLayout_aspectRatioWidth, 4);
-            mAspectRatioHeight = styledAttributes.getInt(R.styleable
-                    .FixedAspectRatioFrameLayout_aspectRatioHeight, 3);
+            mAspectRatioWidth = styledAttributes.getInt(R.styleable.FixedAspectRatioFrameLayout_aspectRatioWidth, 4);
+            mAspectRatioHeight = styledAttributes.getInt(R.styleable.FixedAspectRatioFrameLayout_aspectRatioHeight, 3);
         } finally {
             styledAttributes.recycle();
         }
