@@ -23,6 +23,7 @@ import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -54,16 +55,8 @@ public class ArticleDetailFragment extends Fragment implements
     private Cursor mCursor;
     private long mItemId;
     private View mRootView;
-    private int mMutedColor = 0xFF333333;
-    private CoordinatorLayout mDrawInsetsFrameLayout;
-    private ColorDrawable mStatusBarColorDrawable;
 
-    private int mTopInset;
-    private AppBarLayout mAppBarLayout;
     private ThreeTwoImageView mPhotoView;
-    private int mScrollY;
-    private boolean mIsCard = false;
-
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
     // Use default locale format
     private SimpleDateFormat outputFormat = new SimpleDateFormat();
@@ -98,12 +91,6 @@ public class ArticleDetailFragment extends Fragment implements
             mPosition = getArguments().getInt(ARG_ITEM_POSITION);
         }
 
-        mIsCard = getResources().getBoolean(R.bool.detail_is_card);
-        setHasOptionsMenu(true);
-    }
-
-    public ArticleDetailActivity getActivityCast() {
-        return (ArticleDetailActivity) getActivity();
     }
 
     @Override
@@ -121,8 +108,6 @@ public class ArticleDetailFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
-        mDrawInsetsFrameLayout = (CoordinatorLayout)
-                mRootView.findViewById(R.id.draw_insets_frame_layout);
 
 
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) mRootView.findViewById(R.id.collapsing_toolbar_movie_detail);
@@ -130,8 +115,6 @@ public class ArticleDetailFragment extends Fragment implements
 
         setupBar();
 
-        mAppBarLayout = (AppBarLayout) mRootView.findViewById(R.id.photo_container);
-        mStatusBarColorDrawable = new ColorDrawable(0);
 
         mRootView.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,25 +128,15 @@ public class ArticleDetailFragment extends Fragment implements
 
 
         mPhotoView = (ThreeTwoImageView) mRootView.findViewById(R.id.photo);
-        mPhotoView.setTransitionName(getString(R.string.transition_name_thumbnail) + mPosition);
-        Log.d(TAG, "mPhotoView.getTransitionName()" + mPhotoView.getTransitionName());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mPhotoView.setTransitionName(getString(R.string.transition_name_thumbnail) + mPosition);
+            Log.d(TAG, "mPhotoView.getTransitionName()" + mPhotoView.getTransitionName());
+        }
+
         bindViews();
         return mRootView;
     }
 
-    static float progress(float v, float min, float max) {
-        return constrain((v - min) / (max - min), 0, 1);
-    }
-
-    static float constrain(float val, float min, float max) {
-        if (val < min) {
-            return min;
-        } else if (val > max) {
-            return max;
-        } else {
-            return val;
-        }
-    }
 
     private Date parsePublishedDate() {
         try {
@@ -214,8 +187,7 @@ public class ArticleDetailFragment extends Fragment implements
                                 + mCursor.getString(ArticleLoader.Query.AUTHOR)));
 
             }
-            bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).substring
-                    (0, 500).replaceAll("(\r\n|\n)", "<br />")));
+            bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
             ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
                     .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader
                             .ImageListener() {
@@ -225,7 +197,6 @@ public class ArticleDetailFragment extends Fragment implements
                             Bitmap bitmap = imageContainer.getBitmap();
                             if (bitmap != null) {
                                 Palette p = Palette.generate(bitmap, 12);
-                                mMutedColor = p.getDarkMutedColor(0xFF333333);
                                 mPhotoView.setImageBitmap(imageContainer.getBitmap());
                                 mRootView.findViewById(R.id.meta_bar);
                             }
@@ -287,11 +258,16 @@ public class ArticleDetailFragment extends Fragment implements
     private void setupBar() {
         ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         mCollapsingToolbarLayout.setExpandedTitleColor(getHexColor(android.R.color.transparent));
 
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "home selected");
+                ((AppCompatActivity) getActivity()).supportFinishAfterTransition();
+            }
+        });
     }
-
 
     private int getHexColor(int colorCode) {
         int color;
