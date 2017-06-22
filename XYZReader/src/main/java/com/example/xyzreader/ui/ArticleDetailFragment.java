@@ -126,10 +126,9 @@ public class ArticleDetailFragment extends Fragment implements
 
 
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) mRootView.findViewById(R.id.collapsing_toolbar_movie_detail);
-        mCollapsingToolbarLayout.setExpandedTitleColor(getHexColor(android.R.color.transparent));
         mToolbar = (Toolbar) mRootView.findViewById(R.id.toolbar_detail_article);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
 
+        setupBar();
 
         mAppBarLayout = (AppBarLayout) mRootView.findViewById(R.id.photo_container);
         mStatusBarColorDrawable = new ColorDrawable(0);
@@ -283,6 +282,14 @@ public class ArticleDetailFragment extends Fragment implements
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
         mCursor = null;
         bindViews();
+    }
+
+    private void setupBar() {
+        ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mCollapsingToolbarLayout.setExpandedTitleColor(getHexColor(android.R.color.transparent));
+
     }
 
 
