@@ -17,8 +17,7 @@ android {
     buildToolsVersion "25.0.2"
 
     defaultConfig {
-        //TODO: St min version 19 (Kitkat)
-        minSdkVersion 21
+        minSdkVersion 16
         targetSdkVersion 25
     }
 }
