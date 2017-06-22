@@ -25,12 +25,5 @@
         <item name="android:foreground">?android:windowContentOverlay</item>
     </style>
 
-    <style name="Theme.Bacon.DarkActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/seance_500</item>
-        <item name="colorPrimaryDark">@color/seance_700</item>
-        <item name="colorAccent">@color/green_accent</item>
-    </style>
-
 
 </resources>

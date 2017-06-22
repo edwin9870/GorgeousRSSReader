@@ -20,6 +20,7 @@
             android:layout_marginRight="@dimen/list_toolbar_side_margin"
             app:layout_scrollFlags="scroll|enterAlways"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             >
 
             <ImageView
