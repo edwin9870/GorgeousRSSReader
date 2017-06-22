@@ -8,11 +8,16 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ShareCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
@@ -54,7 +59,7 @@ public class ArticleDetailFragment extends Fragment implements
     private ColorDrawable mStatusBarColorDrawable;
 
     private int mTopInset;
-    private View mPhotoContainerView;
+    private AppBarLayout mAppBarLayout;
     private ThreeTwoImageView mPhotoView;
     private int mScrollY;
     private boolean mIsCard = false;
@@ -63,8 +68,10 @@ public class ArticleDetailFragment extends Fragment implements
     // Use default locale format
     private SimpleDateFormat outputFormat = new SimpleDateFormat();
     // Most time functions can only handle 1902 - 2037
-    private GregorianCalendar START_OF_EPOCH = new GregorianCalendar(2,1,1);
+    private GregorianCalendar START_OF_EPOCH = new GregorianCalendar(2, 1, 1);
     private int mPosition;
+    private Toolbar mToolbar;
+    private CollapsingToolbarLayout mCollapsingToolbarLayout;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -112,14 +119,19 @@ public class ArticleDetailFragment extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
         mDrawInsetsFrameLayout = (CoordinatorLayout)
                 mRootView.findViewById(R.id.draw_insets_frame_layout);
 
 
-        mPhotoContainerView = mRootView.findViewById(R.id.photo_container);
+        mCollapsingToolbarLayout = (CollapsingToolbarLayout) mRootView.findViewById(R.id.collapsing_toolbar_movie_detail);
+        mCollapsingToolbarLayout.setExpandedTitleColor(getHexColor(android.R.color.transparent));
+        mToolbar = (Toolbar) mRootView.findViewById(R.id.toolbar_detail_article);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
 
+
+        mAppBarLayout = (AppBarLayout) mRootView.findViewById(R.id.photo_container);
         mStatusBarColorDrawable = new ColorDrawable(0);
 
         mRootView.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
@@ -135,7 +147,7 @@ public class ArticleDetailFragment extends Fragment implements
 
         mPhotoView = (ThreeTwoImageView) mRootView.findViewById(R.id.photo);
         mPhotoView.setTransitionName(getString(R.string.transition_name_thumbnail) + mPosition);
-        Log.d(TAG, "mPhotoView.getTransitionName()"+mPhotoView.getTransitionName());
+        Log.d(TAG, "mPhotoView.getTransitionName()" + mPhotoView.getTransitionName());
         bindViews();
         return mRootView;
     }
@@ -176,13 +188,16 @@ public class ArticleDetailFragment extends Fragment implements
         TextView bodyView = (TextView) mRootView.findViewById(R.id.article_body);
 
 
-        bodyView.setTypeface(Typeface.createFromAsset(getResources().getAssets(), "Rosario-Regular.ttf"));
+        bodyView.setTypeface(Typeface.createFromAsset(getResources().getAssets(),
+                "Rosario-Regular.ttf"));
 
         if (mCursor != null) {
             mRootView.setAlpha(0);
             mRootView.setVisibility(View.VISIBLE);
             mRootView.animate().alpha(1);
-            titleView.setText(mCursor.getString(ArticleLoader.Query.TITLE));
+            String title = mCursor.getString(ArticleLoader.Query.TITLE);
+            titleView.setText(title);
+            mToolbar.setTitle(title);
             Date publishedDate = parsePublishedDate();
             if (!publishedDate.before(START_OF_EPOCH.getTime())) {
                 bylineView.setText(Html.fromHtml(
@@ -198,15 +213,18 @@ public class ArticleDetailFragment extends Fragment implements
                 // If date is before 1902, just show the string
                 bylineView.setText(Html.fromHtml(
                         outputFormat.format(publishedDate) + " by <font color='#ffffff'>"
-                        + mCursor.getString(ArticleLoader.Query.AUTHOR)
+                                + mCursor.getString(ArticleLoader.Query.AUTHOR)
                                 + "</font>"));
 
             }
-            bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).substring(0,500).replaceAll("(\r\n|\n)", "<br />")));
+            bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).substring
+                    (0, 500).replaceAll("(\r\n|\n)", "<br />")));
             ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
-                    .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
+                    .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader
+                            .ImageListener() {
                         @Override
-                        public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
+                        public void onResponse(ImageLoader.ImageContainer imageContainer, boolean
+                                b) {
                             Bitmap bitmap = imageContainer.getBitmap();
                             if (bitmap != null) {
                                 Palette p = Palette.generate(bitmap, 12);
@@ -224,7 +242,7 @@ public class ArticleDetailFragment extends Fragment implements
         } else {
             mRootView.setVisibility(View.GONE);
             titleView.setText("N/A");
-            bylineView.setText("N/A" );
+            bylineView.setText("N/A");
             bodyView.setText("N/A");
         }
     }
@@ -250,7 +268,8 @@ public class ArticleDetailFragment extends Fragment implements
             mCursor = null;
         }
 
-        mPhotoView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+        mPhotoView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver
+                .OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
                 mPhotoView.getViewTreeObserver().removeOnPreDrawListener(this);
@@ -268,14 +287,14 @@ public class ArticleDetailFragment extends Fragment implements
         bindViews();
     }
 
-    public int getUpButtonFloor() {
-        if (mPhotoContainerView == null || mPhotoView.getHeight() == 0) {
-            return Integer.MAX_VALUE;
-        }
 
-        // account for parallax
-        return mIsCard
-                ? (int) mPhotoContainerView.getTranslationY() + mPhotoView.getHeight() - mScrollY
-                : mPhotoView.getHeight() - mScrollY;
+    private int getHexColor(int colorCode) {
+        int color;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            color = getResources().getColor(colorCode, ArticleDetailFragment.this.getActivity().getTheme());
+        } else {
+            color = getResources().getColor(colorCode);
+        }
+        return color;
     }
 }

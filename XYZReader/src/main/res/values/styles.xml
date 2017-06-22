@@ -33,8 +33,4 @@
     </style>
 
 
-    <style name="Theme.Bacon.NoActionBar.Detail">
-        <item name="android:statusBarColor">@android:color/transparent</item>
-    </style>
-
 </resources>

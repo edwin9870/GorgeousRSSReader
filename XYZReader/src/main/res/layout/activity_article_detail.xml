@@ -4,13 +4,15 @@
 
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
+        android:fitsSystemWindows="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content" />
 
     <FrameLayout
         android:id="@+id/up_container"
         android:background="@android:color/transparent"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="?actionBarSize">
 
         <ImageButton
