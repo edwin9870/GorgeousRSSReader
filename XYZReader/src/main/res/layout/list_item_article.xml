@@ -35,10 +35,10 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="4"
+            android:textColor="@color/PrimaryDarkColorText"
             android:paddingEnd="@dimen/card_view_text_padding_right"
             android:paddingStart="@dimen/card_view_text_padding_left"
             android:paddingTop="@dimen/card_view_title_text_padding_top"
-            android:textColor="@color/colorPrimaryText"
             tools:text="HTC U11 released"/>
 
         <TextView
@@ -46,12 +46,12 @@
             style="@style/TextAppearance.AppCompat.Body2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/SecondaryDarkColorText"
             android:layout_marginBottom="@dimen/card_view_subtitle_text_padding_bottom"
             android:ellipsize="end"
             android:maxLines="2"
             android:paddingEnd="@dimen/card_view_text_padding_right"
             android:paddingStart="@dimen/card_view_text_padding_left"
-            android:textColor="@color/colorSecondaryText"
             tools:text="It will be released the next week"/>
     </LinearLayout>
 

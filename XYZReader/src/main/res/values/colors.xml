@@ -24,6 +24,8 @@
     <color name="seance_700">#6a0080</color>
     <color name="green_accent">#A2FF37</color>
 
-    <color name="colorPrimaryText">#DE000000</color>
-    <color name="colorSecondaryText">#8A000000</color>
+    <color name="PrimaryDarkColorText">#DE000000</color>
+    <color name="SecondaryDarkColorText">#8A000000</color>
+    <color name="PrimaryWhiteColorText">#FFFFFF</color>
+    <color name="SecondaryWhiteColorText">#B3FFFFFF</color>
 </resources>
