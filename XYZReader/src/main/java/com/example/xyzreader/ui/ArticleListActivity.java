@@ -1,5 +1,7 @@
 package com.example.xyzreader.ui;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.LoaderManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -31,6 +33,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
+
+import static com.example.xyzreader.ui.ArticleDetailFragment.*;
+import static com.example.xyzreader.ui.ArticleDetailFragment.ARG_ITEM_ID;
 
 /**
  * An activity representing a list of Articles. This activity has different presentations for
@@ -147,20 +152,38 @@ public class ArticleListActivity extends AppCompatActivity implements
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = getLayoutInflater().inflate(R.layout.list_item_article, parent, false);
             final ViewHolder vh = new ViewHolder(view);
+            final boolean isTablet = getResources().getBoolean(R.bool.is_tablet);
+            Log.d(TAG, "isTablet: "+ isTablet);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
+                    long itemId = getItemId(vh.getAdapterPosition());
                     Intent intent = new Intent(Intent.ACTION_VIEW,
-                            ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition())));
+                            ItemsContract.Items.buildItemUri(itemId));
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        Log.d(TAG, "Thumbnail transition name: " + vh.thumbnailView.getTransitionName());
+                        Log.d(TAG, "Thumbnail transition name: " + vh.thumbnailView
+                                .getTransitionName());
                         ActivityOptionsCompat options = ActivityOptionsCompat
                                 .makeSceneTransitionAnimation(ArticleListActivity.this,
-                                vh.thumbnailView, vh.thumbnailView.getTransitionName());
+                                        vh.thumbnailView, vh.thumbnailView.getTransitionName());
 
-                        startActivity(intent, options.toBundle());
+                        if (isTablet) {
+                            FragmentManager fragmentManager = getFragmentManager();
+                            ArticleDetailDialogFragment newFragment = new
+                                    ArticleDetailDialogFragment();
+                            Bundle arguments = new Bundle();
+                            arguments.putLong(ARG_ITEM_ID, itemId);
+                            arguments.putInt(ARG_ITEM_POSITION, vh.getAdapterPosition());
+                            newFragment.setArguments(arguments);
+                            FragmentTransaction transaction = fragmentManager.beginTransaction();
+                            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                            transaction.add(android.R.id.content, newFragment).addToBackStack
+                                    (null).commit();
+                        } else {
+                            startActivity(intent, options.toBundle());
+                        }
                     } else {
                         startActivity(intent);
                     }
@@ -188,7 +211,8 @@ public class ArticleListActivity extends AppCompatActivity implements
             Date publishedDate = parsePublishedDate();
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                String transitionName = getString(R.string.transition_name_thumbnail) + String.valueOf(position);
+                String transitionName = getString(R.string.transition_name_thumbnail) + String
+                        .valueOf(position);
                 holder.thumbnailView.setTransitionName(transitionName);
                 Log.d(TAG, "transitionName: " + transitionName);
             }
