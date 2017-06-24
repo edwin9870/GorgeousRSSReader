@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.xyzreader.R;
@@ -22,7 +23,7 @@ import com.example.xyzreader.data.ItemsContract;
  * An activity representing a single Article detail screen, letting you swipe between articles.
  */
 public class ArticleDetailActivity extends AppCompatActivity
-        implements LoaderManager.LoaderCallbacks<Cursor> {
+        implements LoaderManager.LoaderCallbacks<Cursor>,ArticleDetailFragment.FragmentAcions {
 
     public static final String TAG = ArticleDetailActivity.class.getSimpleName();
     private Cursor mCursor;
@@ -101,6 +102,11 @@ public class ArticleDetailActivity extends AppCompatActivity
         mPagerAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void homeSelected(View view) {
+        supportFinishAfterTransition();
+    }
+
 
     private class MyPagerAdapter extends FragmentStatePagerAdapter {
         public MyPagerAdapter(FragmentManager fm) {
@@ -119,7 +125,7 @@ public class ArticleDetailActivity extends AppCompatActivity
         public Fragment getItem(int position) {
             mCursor.moveToPosition(position);
             return ArticleDetailFragment.newInstance(mCursor.getLong(ArticleLoader.Query._ID),
-                    position);
+                    position, ArticleDetailActivity.this);
         }
 
         @Override

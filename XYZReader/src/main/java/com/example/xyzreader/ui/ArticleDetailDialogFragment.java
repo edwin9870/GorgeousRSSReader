@@ -7,14 +7,20 @@ import android.app.FragmentTransaction;
 import android.app.LoaderManager;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
@@ -24,32 +30,53 @@ import com.example.xyzreader.data.ArticleLoader;
  */
 
 public class ArticleDetailDialogFragment extends DialogFragment implements LoaderManager
-        .LoaderCallbacks<Cursor> {
+        .LoaderCallbacks<Cursor>, ArticleDetailFragment.FragmentAcions, View.OnTouchListener {
 
     public static final String TAG = ArticleDetailDialogFragment.class.getSimpleName();
     private Cursor mCursor;
     private long mStartId;
     private int mPosition;
+    private View mView;
+
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_article_detail, container, false);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable
+            Bundle savedInstanceState) {
+        mView = inflater.inflate(R.layout.dialog_article_detail, container, false);
         getLoaderManager().initLoader(0, null, this);
-        if (savedInstanceState == null) {
-            if (getArguments() != null) {
-                mStartId = getArguments().getLong(ArticleDetailFragment.ARG_ITEM_ID);
-                mPosition = getArguments().getInt(ArticleDetailFragment.ARG_ITEM_POSITION);
-                Log.d(TAG, "mStartId: "+ mStartId);
-                Log.d(TAG, "mPosition: "+ mPosition);
-            }
+        if (savedInstanceState == null && getArguments() != null) {
+            mStartId = getArguments().getLong(ArticleDetailFragment.ARG_ITEM_ID);
+            mPosition = getArguments().getInt(ArticleDetailFragment.ARG_ITEM_POSITION);
+            Log.d(TAG, "mStartId: " + mStartId);
+            Log.d(TAG, "mPosition: " + mPosition);
+        } else {
+            return mView;
         }
 
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+
+
+        mView.findViewById(R.id.fragment_article_detail).getLayoutParams().height = (int) (height
+                * 0.75);
+
+        startFragment();
+
+        mView.setOnTouchListener(this);
+
+        return mView;
+    }
+
+    private void startFragment() {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fragment_article_detail, ArticleDetailFragment.newInstance(mStartId, mPosition));
+        fragmentTransaction.add(R.id.fragment_article_detail, ArticleDetailFragment.newInstance
+                (mStartId, mPosition, this));
         fragmentTransaction.commit();
-        return view;
     }
 
     @NonNull
@@ -57,6 +84,7 @@ public class ArticleDetailDialogFragment extends DialogFragment implements Loade
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCanceledOnTouchOutside(true);
         return dialog;
     }
 
@@ -85,5 +113,41 @@ public class ArticleDetailDialogFragment extends DialogFragment implements Loade
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mCursor = null;
+    }
+
+    @Override
+    public void homeSelected(View view) {
+
+        closeDialog();
+    }
+
+
+    private void closeDialog() {
+        AlphaAnimation fadeOut = new AlphaAnimation(1, 0);
+        fadeOut.setDuration(390);
+        mView.setAnimation(fadeOut);
+        mView.startAnimation(fadeOut);
+        fadeOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                dismiss();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        closeDialog();
+        return true;
     }
 }

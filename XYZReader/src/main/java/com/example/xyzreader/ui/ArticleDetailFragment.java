@@ -61,6 +61,7 @@ public class ArticleDetailFragment extends Fragment implements
     private int mPosition;
     private Toolbar mToolbar;
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
+    private FragmentAcions fragmentAcions;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -69,12 +70,13 @@ public class ArticleDetailFragment extends Fragment implements
     public ArticleDetailFragment() {
     }
 
-    public static ArticleDetailFragment newInstance(long itemId, int position) {
+    public static ArticleDetailFragment newInstance(long itemId, int position, FragmentAcions fragmentAcions) {
         Bundle arguments = new Bundle();
         arguments.putLong(ARG_ITEM_ID, itemId);
         arguments.putInt(ARG_ITEM_POSITION, position);
         ArticleDetailFragment fragment = new ArticleDetailFragment();
         fragment.setArguments(arguments);
+        fragment.fragmentAcions = fragmentAcions;
         return fragment;
     }
 
@@ -104,7 +106,6 @@ public class ArticleDetailFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
-
 
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) mRootView.findViewById(R.id.collapsing_toolbar_movie_detail);
         mToolbar = (Toolbar) mRootView.findViewById(R.id.toolbar_detail_article);
@@ -256,7 +257,8 @@ public class ArticleDetailFragment extends Fragment implements
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "home selected");
-                ((AppCompatActivity) getActivity()).supportFinishAfterTransition();
+                //((AppCompatActivity) getActivity()).supportFinishAfterTransition();
+                fragmentAcions.homeSelected(v);
             }
         });
     }
@@ -269,5 +271,9 @@ public class ArticleDetailFragment extends Fragment implements
             color = getResources().getColor(colorCode);
         }
         return color;
+    }
+
+    interface FragmentAcions {
+        void homeSelected(View view);
     }
 }

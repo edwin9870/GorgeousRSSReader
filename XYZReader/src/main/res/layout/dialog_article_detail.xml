@@ -3,12 +3,17 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/shadow"/>
+
     <FrameLayout
+        android:id="@+id/fragment_article_detail"
         android:layout_width="700dp"
+        android:layout_height="0dp"
+        android:layout_gravity="center|center_vertical"
         android:background="#FFF"
-        android:layout_gravity="center"
-        android:elevation="24dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/fragment_article_detail"/>
+        android:elevation="24dp"/>
 
 </FrameLayout>
