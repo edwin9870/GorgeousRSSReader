@@ -33,6 +33,8 @@ public class ArticleDetailDialogFragment extends DialogFragment implements Loade
         .LoaderCallbacks<Cursor>, ArticleDetailFragment.FragmentAcions, View.OnTouchListener {
 
     public static final String TAG = ArticleDetailDialogFragment.class.getSimpleName();
+    public static final double HEIGHT_PERCENTAGE = 0.75;
+    public static final double WIDTH_PERCENTAGE = 0.82;
     private Cursor mCursor;
     private long mStartId;
     private int mPosition;
@@ -61,8 +63,9 @@ public class ArticleDetailDialogFragment extends DialogFragment implements Loade
         int height = size.y;
 
 
-        mView.findViewById(R.id.fragment_article_detail).getLayoutParams().height = (int) (height
-                * 0.75);
+        View fragmentContainer = mView.findViewById(R.id.fragment_article_detail);
+        fragmentContainer.getLayoutParams().height = (int) (height * HEIGHT_PERCENTAGE);
+        fragmentContainer.getLayoutParams().width = (int) (width * WIDTH_PERCENTAGE);
 
         startFragment();
 
