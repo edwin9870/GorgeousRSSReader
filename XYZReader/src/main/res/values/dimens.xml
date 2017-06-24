@@ -4,14 +4,29 @@
     <dimen name="detail_body_text_size">22sp</dimen>
     <item name="detail_body_line_spacing_multiplier" format="float" type="fraction">1.25</item>
 
-    <dimen name="fab_elevation">2dp</dimen>
-    <dimen name="fab_press_translation_z">6dp</dimen>
-    <dimen name="fab_margin">24dp</dimen>
+    <!-- FloatingActionButton -->
+    <dimen name="fab_elevation">6dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="fab_width">56dp</dimen>
+    <dimen name="fab_height">56dp</dimen>
 
     <!-- CardView -->
     <dimen name="card_view_text_padding_left">16dp</dimen>
     <dimen name="card_view_text_padding_right">@dimen/card_view_text_padding_left</dimen>
     <dimen name="card_view_title_text_padding_top">24dp</dimen>
     <dimen name="card_view_subtitle_text_padding_bottom">24dp</dimen>
+
+
+    <dimen name="linear_body_padding_top">24dp</dimen>
+
+    <!-- AppBarLayout -->
+    <dimen name="app_bar_elevation">4dp</dimen>
+    <dimen name="list_side_margin_bottom">28dp</dimen>
+
+    <!-- Article activity RecyclerView -->
+    <dimen name="list_side_margin_top">4dp</dimen>
+
+    <!-- SwipeRefreshLayout -->
+    <dimen name="swipe_margin_top">4dp</dimen>
 
 </resources>
